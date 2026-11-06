@@ -46,13 +46,13 @@ Invited accounts:
 - `mc.tanner@uct.ac.za`
 - `ridewaan.hanslo@uct.ac.za`
 
-  * **Dedicated Database Credentials:**
-  * **Database Name:** `geopolitics`
-  * **Password (for all users below):** `Testing123!`
-  * **Usernames:**
-    * `ammarcanani_db_user`
-    * `mctanner_db_user`
-    * `ridewaanhanslo_db_user`
+Dedicated Database Credentials:
+Database Name: `geopolitics`.
+Password (for all users below): `Testing123!`
+Usernames:
+- `ammarcanani_db_user`
+- `mctanner_db_user`
+- `ridewaanhanslo_db_user`
 
 ## How to Run Locally
 1. Clone the repository:
