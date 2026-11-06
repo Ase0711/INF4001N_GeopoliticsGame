@@ -41,10 +41,18 @@ If the application cannot connect to MongoDB Atlas, it can switch to an in-memor
 
 ## Database Access
 The MongoDB Atlas database has been configured with read/write access. 
-Invited marker accounts:
+Invited accounts:
 - `ammarcanani@gmail.com`
 - `mc.tanner@uct.ac.za`
 - `ridewaan.hanslo@uct.ac.za`
+
+  * **Dedicated Database Credentials:**
+  * **Database Name:** `geopolitics`
+  * **Password (for all users below):** `Testing123!`
+  * **Usernames:**
+    * `ammarcanani_db_user`
+    * `mctanner_db_user`
+    * `ridewaanhanslo_db_user`
 
 ## How to Run Locally
 1. Clone the repository:
