@@ -1,0 +1,71 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Conquer the world";
+    var signedIn = User.Identity?.IsAuthenticated == true;
+}
+
+<section class="hero row align-items-center g-4 mb-5">
+    <div class="col-lg-6">
+        <p class="text-uppercase text-primary fw-semibold small mb-2">Single-player strategy · 10 nations · 1 winner</p>
+        <h1 class="display-5 fw-bold">Conquer the world.</h1>
+        <p class="lead text-secondary">
+            Pick your nation, face nine AI rivals that play to win, and take all ten countries.
+            Every battle is fought dice by dice and narrated live by an AI war correspondent.
+        </p>
+        @if (!signedIn)
+        {
+            <div class="d-flex gap-2 mt-4">
+                <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">Create a free account</a>
+                <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Login">Sign in</a>
+            </div>
+            <p class="small text-secondary mt-3">Anyone can watch a shared game. You need an account to play.</p>
+        }
+    </div>
+    <div class="col-lg-6">
+        @if (signedIn)
+        {
+            <div class="geo-card p-4">
+                <h2 class="h5 mb-3">Start a new campaign</h2>
+                <partial name="_NewGameForm" model="Model.NewGame" />
+            </div>
+        }
+        else
+        {
+            <div class="geo-card p-4 hero-dice text-center">
+                <div class="dice-demo" aria-hidden="true">
+                    <span class="die die-attacker">6</span><span class="vs">vs</span><span class="die die-defender">4</span>
+                </div>
+                <p class="mb-0 text-secondary">1 die = 1 soldier. Higher roll wins. Ties spare both.</p>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="row g-3 mb-5">
+    <div class="col-md-6 col-lg-3"><div class="geo-card h-100 p-3"><h3 class="h6">🎲 Live battles</h3><p class="small text-secondary mb-0">Paired dice, round by round, with the losses and the result shown as they happen.</p></div></div>
+    <div class="col-md-6 col-lg-3"><div class="geo-card h-100 p-3"><h3 class="h6">🤖 NPCs that think</h3><p class="small text-secondary mb-0">Aggressive, balanced and defensive rivals that explain every decision they make.</p></div></div>
+    <div class="col-md-6 col-lg-3"><div class="geo-card h-100 p-3"><h3 class="h6">🎙️ AI commentary</h3><p class="small text-secondary mb-0">An LLM narrates each round. Fast-forward speeds up NPC turns without hiding them.</p></div></div>
+    <div class="col-md-6 col-lg-3"><div class="geo-card h-100 p-3"><h3 class="h6">📊 Analytics</h3><p class="small text-secondary mb-0">Win rates, best starting countries, a leaderboard and your personal record.</p></div></div>
+</section>
+
+<section>
+    <div class="d-flex justify-content-between align-items-end mb-3">
+        <h2 class="h4 mb-0">Watch live campaigns</h2>
+        <a asp-controller="Analytics" asp-action="Index" class="small">Platform stats →</a>
+    </div>
+    @if (Model.LiveGames.Count == 0)
+    {
+        <p class="text-secondary">No campaigns are in progress yet — be the first.</p>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var g in Model.LiveGames)
+            {
+                <div class="col-sm-6 col-lg-4"><partial name="_GameCard" model="g" /></div>
+            }
+        </div>
+    }
+</section>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

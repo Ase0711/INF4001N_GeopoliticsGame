@@ -1,0 +1,103 @@
+@using GeopoliticsGame.Web.Infrastructure
+@using GeopoliticsGame.Core.Abstractions
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject DatabaseInfo Database
+@inject ICommentaryService Commentary
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Active(string c, string? a = null) =>
+        controller == c && (a is null || action == a) ? "active" : string.Empty;
+    var signedIn = User.Identity?.IsAuthenticated == true;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+    <meta name="description" content="Geopolitics — a single-player, Risk-style strategy game. Conquer all 10 nations." />
+    <title>@ViewData["Title"] · Geopolitics</title>
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark geo-nav">
+        <div class="container-xl">
+            <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">🌍 Geopolitics</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link @Active("Home", "Index")" asp-controller="Home" asp-action="Index">Home</a></li>
+                    @if (signedIn)
+                    {
+                        <li class="nav-item"><a class="nav-link @Active("Games")" asp-controller="Games" asp-action="Index">My games</a></li>
+                    }
+                    <li class="nav-item"><a class="nav-link @Active("Home", "Rules")" asp-controller="Home" asp-action="Rules">How to play</a></li>
+                    <li class="nav-item"><a class="nav-link @Active("Analytics")" asp-controller="Analytics" asp-action="Index">Analytics</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    @if (signedIn)
+                    {
+                        <span class="text-secondary small me-1">Commander <strong class="text-light">@User.Identity!.Name</strong></span>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            <button type="submit" class="btn btn-sm btn-outline-light">Sign out</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-sm btn-outline-light" asp-controller="Account" asp-action="Login"
+                           asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">Sign in</a>
+                        <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Register">Sign up</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="container-xl py-4 flex-grow-1" role="main">
+    @if (TempData["Toast"] is string toast)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="status">
+            @toast
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] is string error)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @RenderBody()
+</main>
+
+<footer class="geo-footer py-3">
+    <div class="container-xl d-flex flex-wrap justify-content-between gap-2 small text-secondary">
+        <span>Geopolitics · UCT INF4001 entrance project</span>
+        <span>
+            Data: <span class="badge @(Database.IsPersistent ? "bg-success" : "bg-warning text-dark")" title="@Database.Detail">@Database.Provider</span>
+            @if (!Database.IsPersistent)
+            {
+                <span class="text-warning">(@Database.Detail)</span>
+            }
+            · Commentary: <span class="badge @(Commentary.IsLive ? "bg-success" : "bg-secondary")">@(Commentary.IsLive ? "Live LLM" : "Built-in")</span>
+        </span>
+    </div>
+</footer>
+
+<div id="toast-area" class="geo-toast-area" aria-live="polite"></div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

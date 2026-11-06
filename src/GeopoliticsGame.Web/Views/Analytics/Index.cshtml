@@ -1,0 +1,106 @@
+@model AnalyticsViewModel
+@{
+    ViewData["Title"] = "Analytics";
+    var p = Model.Platform;
+}
+
+<h1 class="h2 mb-4">📊 Analytics</h1>
+
+@if (Model.Player is { } me)
+{
+    <section class="mb-5">
+        <h2 class="h5 mb-3">Your record, @me.Username</h2>
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@me.GamesPlayed</div><div class="label">Games played</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num text-success">@me.GamesWon</div><div class="label">Won</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num text-danger">@me.GamesLost</div><div class="label">Lost</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@me.WinRate%</div><div class="label">Win rate (finished)</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@me.CountriesConquered</div><div class="label">Countries conquered</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@me.BattlesWon / @me.BattlesLost</div><div class="label">Battles won / lost</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@me.BattleWinRate%</div><div class="label">Battle success</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="num">@(me.FastestWinRounds?.ToString() ?? "—")</div><div class="label">Fastest win (rounds)</div></div></div>
+        </div>
+        @if (me.FavouriteCountry is { } fav)
+        {
+            <p class="text-secondary">Favourite starting country: <strong class="text-light">@fav.Flag @fav.Name</strong> (@fav.Count game@(fav.Count == 1 ? "" : "s"), @fav.WinRate% won).</p>
+        }
+        @if (me.RecentGames.Count > 0)
+        {
+            <div class="row g-3">
+                @foreach (var g in me.RecentGames.Take(3))
+                {
+                    <div class="col-md-4"><partial name="_GameCard" model="g" /></div>
+                }
+            </div>
+        }
+    </section>
+}
+else
+{
+    <div class="alert alert-secondary"><a asp-controller="Account" asp-action="Login" asp-route-returnUrl="/Analytics">Sign in</a> to see your personal analytics.</div>
+}
+
+<section>
+    <h2 class="h5 mb-3">Platform</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.TotalGames</div><div class="label">Games</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.Players</div><div class="label">Commanders</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.ActiveGames</div><div class="label">In progress</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.HumanWinRate%</div><div class="label">Humans win (@p.HumanWins vs @p.NpcWins)</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.AverageRoundsToFinish</div><div class="label">Avg rounds per finished game</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.TotalConquests</div><div class="label">Conquests by humans</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.TotalDiceRolled</div><div class="label">Attack dice rolled</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat"><div class="num">@p.FinishedGames</div><div class="label">Finished</div></div></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="geo-card p-3 h-100">
+                <h3 class="h6">Most-picked countries</h3>
+                @if (p.MostPickedCountries.Count == 0) { <p class="small text-secondary mb-0">No games yet.</p> }
+                else
+                {
+                    var max = Math.Max(1, p.MostPickedCountries.Max(c => c.Count));
+                    foreach (var c in p.MostPickedCountries)
+                    {
+                        <div class="small d-flex justify-content-between mt-2"><span>@c.Flag @c.Name</span><span>@c.Count</span></div>
+                        <div class="progress geo-progress"><div class="progress-bar" style="width:@(c.Count * 100 / max)%"></div></div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="geo-card p-3 h-100">
+                <h3 class="h6">Best starting countries <span class="text-secondary fw-normal">(win rate)</span></h3>
+                @if (p.BestStartingCountries.Count == 0) { <p class="small text-secondary mb-0">No finished games yet.</p> }
+                else
+                {
+                    foreach (var c in p.BestStartingCountries)
+                    {
+                        <div class="small d-flex justify-content-between mt-2"><span>@c.Flag @c.Name</span><span>@c.WinRate% of @c.Count</span></div>
+                        <div class="progress geo-progress"><div class="progress-bar bg-success" style="width:@c.WinRate%"></div></div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="geo-card p-3 h-100">
+                <h3 class="h6">Leaderboard</h3>
+                @if (p.Leaderboard.Count == 0) { <p class="small text-secondary mb-0">No commanders yet.</p> }
+                else
+                {
+                    <table class="table table-dark table-sm small mb-0">
+                        <thead><tr><th>#</th><th>Commander</th><th class="text-end">Wins</th><th class="text-end">Conquests</th></tr></thead>
+                        <tbody>
+                        @for (var i = 0; i < p.Leaderboard.Count; i++)
+                        {
+                            var row = p.Leaderboard[i];
+                            <tr><td>@(i + 1)</td><td>@row.Username</td><td class="text-end">@row.Wins/@row.Games</td><td class="text-end">@row.Conquests</td></tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</section>

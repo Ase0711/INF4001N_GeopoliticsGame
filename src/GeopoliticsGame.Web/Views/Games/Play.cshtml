@@ -1,0 +1,107 @@
+@model PlayViewModel
+@{ ViewData["Title"] = $"{Model.OwnerUsername}'s campaign"; }
+
+<div id="game-app"
+     data-game-id="@Model.GameId"
+     data-can-play="@(Model.CanPlay ? "true" : "false")"
+     data-signed-in="@(Model.IsSignedIn ? "true" : "false")"
+     data-api="@Url.Content("~/api/games/")@Model.GameId">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <h1 class="h3 mb-1">@Model.OwnerUsername's campaign</h1>
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="badge bg-dark border border-secondary" id="round-badge">Round –</span>
+                <span class="badge turn-badge" id="turn-badge">Loading…</span>
+                <span class="badge bg-secondary" id="ai-badge">🎙️ @(Model.AiIsLive ? "Live LLM commentary" : "Built-in commentary")</span>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-light" id="share-btn" title="Copy a link anyone can use to watch">🔗 Share</button>
+            <button type="button" class="btn btn-sm btn-outline-warning" id="ff-btn" aria-pressed="false"
+                    title="Speed up NPC turns (you still see every move)">⏩ Fast-forward: off</button>
+        </div>
+    </div>
+
+    @if (!Model.CanPlay)
+    {
+        <div class="alert alert-info py-2 small">
+            👀 You're watching this game as a <strong>spectator</strong>. It updates live.
+            @if (!Model.IsSignedIn)
+            {
+                <span><a asp-controller="Account" asp-action="Register">Sign up</a> to start your own campaign.</span>
+            }
+            else
+            {
+                <span><a asp-controller="Games" asp-action="Index">Start your own campaign.</a></span>
+            }
+        </div>
+    }
+
+    <div id="game-over" class="alert d-none" role="status"></div>
+
+    <div class="row g-3">
+        <!-- Board -->
+        <div class="col-xl-8">
+            <section id="battle-stage" class="geo-card battle-stage mb-3 d-none" aria-live="polite">
+                <div class="battle-side" id="stage-attacker"></div>
+                <div class="battle-center">
+                    <div class="dice-pairs" id="stage-dice"></div>
+                    <div class="stage-commentary" id="stage-commentary"></div>
+                </div>
+                <div class="battle-side" id="stage-defender"></div>
+            </section>
+
+            <div class="geo-card p-3">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                    <h2 class="h6 mb-0">World map <span class="text-secondary fw-normal">— every country and its soldiers</span></h2>
+                    <div class="d-flex gap-2">
+                        <select id="board-filter" class="form-select form-select-sm" aria-label="Filter countries">
+                            <option value="all">All countries</option>
+                            <option value="mine">Mine</option>
+                            <option value="enemy">Enemies</option>
+                        </select>
+                        <select id="board-sort" class="form-select form-select-sm" aria-label="Sort countries">
+                            <option value="soldiers">Most soldiers</option>
+                            <option value="name">Name</option>
+                            <option value="owner">Owner</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="board" class="board-grid" aria-label="Game board"></div>
+            </div>
+        </div>
+
+        <!-- Side panel -->
+        <div class="col-xl-4">
+            @if (Model.CanPlay)
+            {
+                <section class="geo-card p-3 mb-3" id="command-panel" aria-live="polite">
+                    <h2 class="h6 mb-2">Command</h2>
+                    <div id="command-body" class="small text-secondary">Loading…</div>
+                </section>
+            }
+
+            <section class="geo-card p-3 mb-3">
+                <h2 class="h6 mb-2">Standings</h2>
+                <div id="players"></div>
+            </section>
+
+            <section class="geo-card p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="h6 mb-0">Battle feed</h2>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Filter feed" id="feed-filters">
+                        <button type="button" class="btn btn-outline-secondary active" data-filter="all">All</button>
+                        <button type="button" class="btn btn-outline-secondary" data-filter="battle">Battles</button>
+                        <button type="button" class="btn btn-outline-secondary" data-filter="decision">NPC logic</button>
+                        <button type="button" class="btn btn-outline-secondary" data-filter="commentary">AI</button>
+                    </div>
+                </div>
+                <ol id="feed" class="feed list-unstyled mb-0"></ol>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <script src="~/js/game.js" asp-append-version="true"></script> }

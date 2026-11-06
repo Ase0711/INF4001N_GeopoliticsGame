@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "How to play";
+    (string Pop, int Soldiers)[] bands =
+    {
+        ("Up to 5 million", 1), ("Up to 10 million", 2), ("Up to 25 million", 3), ("Up to 50 million", 4),
+        ("Up to 75 million", 5), ("Up to 100 million", 6), ("Up to 125 million", 7), ("Up to 150 million", 8),
+        ("More than 150 million", 9)
+    };
+}
+<h1 class="h2 mb-4">How to play</h1>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="geo-card p-4 mb-4">
+            <h2 class="h5">🎯 Goal</h2>
+            <p class="mb-0">Conquer all <strong>10 countries</strong>. You start with one; nine NPC rivals hold the rest.
+                Lose your last country and the game is over.</p>
+        </div>
+
+        <div class="geo-card p-4 mb-4">
+            <h2 class="h5">🔁 Your turn</h2>
+            <ol class="mb-0">
+                <li><strong>Reinforce</strong> (from round 2): you get <strong>2 soldiers per country</strong> you control. Spread them however you like.</li>
+                <li><strong>Attack</strong> (optional, once per turn): pick one of your countries with 2+ soldiers, then any enemy country (location doesn't matter).</li>
+                <li><strong>Transfer</strong> soldiers between your countries at any time, except mid-attack. Every country keeps at least 1.</li>
+                <li><strong>End turn</strong> (or skip). The NPCs then play. Use <strong>Fast-forward</strong> to speed them up while still watching every move.</li>
+            </ol>
+        </div>
+
+        <div class="geo-card p-4">
+            <h2 class="h5">🎲 Battles</h2>
+            <ul>
+                <li>You must leave 1 soldier behind, so you can attack with <em>your soldiers − 1</em>.</li>
+                <li>Dice rolled per side = the smaller of (your soldiers − 1) and the defender's soldiers. 10 vs 2 → 2 dice; 3 vs 5 → 2 dice; 2 vs 5 → 1 die.</li>
+                <li>Die 1 fights die 1, die 2 fights die 2… The higher die wins and the other side loses a soldier. <strong>Ties: nobody dies.</strong></li>
+                <li>Keep rolling until the defender is wiped out (<strong>conquest</strong>), you are down to 1 soldier (<strong>repelled</strong>), or you <strong>retreat</strong>, which ends your turn.</li>
+                <li>A conquered country gains <strong>max(2, its soldier value ÷ 2)</strong> soldiers (India 9 → 4, Vatican City 1 → 2). You can then move more soldiers into it.</li>
+            </ul>
+            <p class="small text-secondary mb-0">An in-progress attack is saved on the server: closing the browser doesn't cancel it.</p>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="geo-card p-4 mb-4">
+            <h2 class="h5">🪖 Starting soldiers</h2>
+            <p class="small text-secondary">Based on population (worldometers.info).</p>
+            <table class="table table-dark table-sm mb-0">
+                <thead><tr><th>Population</th><th class="text-end">Soldiers</th></tr></thead>
+                <tbody>
+                @foreach (var (pop, soldiers) in bands)
+                {
+                    <tr><td>@pop</td><td class="text-end">@soldiers</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="geo-card p-4">
+            <h2 class="h5">🤖 NPC personalities</h2>
+            <ul class="mb-0 small">
+                <li><strong>Aggressive</strong> attacks at even odds, presses on longer, and stacks every reinforcement on one strike force.</li>
+                <li><strong>Balanced</strong> wants a 1.4× edge and splits reinforcements between attack and defence.</li>
+                <li><strong>Defensive</strong> only attacks with 2× odds and shores up weak countries first.</li>
+            </ul>
+            <p class="small text-secondary mt-2 mb-0">All NPCs prefer targets they can eliminate, keep the strongest rival in check, and explain every decision in the battle feed.</p>
+        </div>
+    </div>
+</div>

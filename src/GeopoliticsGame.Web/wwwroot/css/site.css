@@ -1,0 +1,196 @@
+/* ── Theme ─────────────────────────────────────────────────────────────── */
+:root {
+    --geo-bg: #0d1220;
+    --geo-surface: #161d2f;
+    --geo-surface-2: #1d2640;
+    --geo-border: #2a3555;
+    --geo-text: #e7ecf7;
+    --geo-muted: #8f9bb8;
+    --geo-primary: #4f8cff;
+    --geo-danger: #e63946;
+    --geo-success: #2a9d8f;
+    --geo-warning: #f4a261;
+    --geo-radius: 14px;
+}
+
+html { position: relative; min-height: 100%; font-size: 15px; }
+@media (min-width: 768px) { html { font-size: 16px; } }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--geo-text);
+    background:
+        radial-gradient(900px 500px at 85% -10%, rgba(79, 140, 255, .18), transparent 60%),
+        radial-gradient(700px 400px at -10% 110%, rgba(230, 57, 70, .10), transparent 60%),
+        var(--geo-bg);
+    background-attachment: fixed;
+}
+
+a { color: #7fb0ff; }
+a:hover { color: #a9c9ff; }
+.text-secondary { color: var(--geo-muted) !important; }
+
+.btn:focus, .btn:active:focus, .form-control:focus, .form-select:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 .2rem rgba(79, 140, 255, .45);
+}
+
+.geo-nav { background: rgba(13, 18, 32, .85); border-bottom: 1px solid var(--geo-border); backdrop-filter: blur(8px); }
+.geo-nav .nav-link.active { color: #fff; font-weight: 600; }
+.geo-footer { border-top: 1px solid var(--geo-border); margin-top: 2rem; }
+
+.geo-card {
+    background: var(--geo-surface);
+    border: 1px solid var(--geo-border);
+    border-radius: var(--geo-radius);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+    color: var(--geo-text);
+}
+
+.form-control, .form-select {
+    background-color: #0f1527;
+    border-color: var(--geo-border);
+    color: var(--geo-text);
+}
+.form-control:focus, .form-select:focus { background-color: #0f1527; color: var(--geo-text); border-color: var(--geo-primary); }
+.form-control::placeholder { color: #66718f; }
+.form-text { color: var(--geo-muted); }
+.alert-secondary { background: var(--geo-surface-2); border-color: var(--geo-border); color: var(--geo-text); }
+.table-dark { --bs-table-bg: transparent; }
+
+.input-validation-error { border-color: var(--geo-danger) !important; }
+.validation-summary-valid { display: none; }
+
+/* ── Home ──────────────────────────────────────────────────────────────── */
+.hero h1 { letter-spacing: -.02em; }
+.hero-dice .dice-demo { display: flex; justify-content: center; align-items: center; gap: 1rem; padding: 1.5rem 0; }
+.hero-dice .die { width: 72px; height: 72px; font-size: 2rem; }
+
+.country-select option { padding: .25rem .5rem; }
+.country-select { background-image: none; }
+
+/* ── Cards / stats ─────────────────────────────────────────────────────── */
+.game-card { padding: 1rem; transition: transform .15s, border-color .15s; }
+.game-card:hover { transform: translateY(-3px); border-color: var(--geo-primary); }
+.display-flag { font-size: 2rem; line-height: 1; }
+.geo-progress { height: 6px; background: #0f1527; }
+
+.stat { background: var(--geo-surface); border: 1px solid var(--geo-border); border-radius: var(--geo-radius); padding: 1rem; text-align: center; height: 100%; }
+.stat .num { font-size: 1.7rem; font-weight: 700; color: #9cc0ff; }
+.stat .label { color: var(--geo-muted); font-size: .8rem; }
+
+/* ── Board ─────────────────────────────────────────────────────────────── */
+.board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: .75rem; }
+
+.territory {
+    --owner: #888;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    text-align: left;
+    padding: .8rem .85rem .75rem;
+    border-radius: 12px;
+    border: 1px solid var(--geo-border);
+    border-top: 4px solid var(--owner);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--owner) 12%, var(--geo-surface-2)), var(--geo-surface-2));
+    color: var(--geo-text);
+    transition: transform .12s, box-shadow .12s, opacity .12s, outline-color .12s;
+}
+.territory:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, .35); }
+.territory:focus-visible { outline: 3px solid var(--geo-primary); outline-offset: 2px; }
+.territory.mine { box-shadow: inset 0 0 0 1px rgba(79, 140, 255, .55); }
+.territory.dim { opacity: .38; }
+.territory.selected { outline: 3px solid var(--geo-primary); outline-offset: 2px; }
+.territory.targeted { outline: 3px dashed var(--geo-danger); outline-offset: 2px; }
+.territory.attacking { animation: pulse-blue 1.2s infinite; }
+.territory.defending { animation: pulse-red 1.2s infinite; }
+
+.t-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.t-flag { font-size: 1.9rem; line-height: 1; }
+.t-soldiers { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.t-draft { display: block; font-size: .75rem; font-weight: 700; color: var(--geo-success); text-align: right; }
+.t-name { font-weight: 700; }
+.t-owner { font-size: .78rem; color: var(--geo-muted); }
+.t-meta { font-size: .7rem; color: #6f7b98; }
+
+.chip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: .35rem; vertical-align: middle; }
+
+@keyframes pulse-blue { 0%, 100% { box-shadow: 0 0 0 0 rgba(79, 140, 255, .55); } 50% { box-shadow: 0 0 0 9px rgba(79, 140, 255, 0); } }
+@keyframes pulse-red  { 0%, 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, .55); } 50% { box-shadow: 0 0 0 9px rgba(230, 57, 70, 0); } }
+
+/* ── Battle stage ──────────────────────────────────────────────────────── */
+.battle-stage { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 1rem; align-items: center; padding: 1rem 1.25rem; }
+@media (max-width: 576px) { .battle-stage { grid-template-columns: 1fr 1fr; } .battle-center { grid-column: 1 / -1; grid-row: 2; } }
+.battle-side { text-align: center; }
+.side-role { text-transform: uppercase; letter-spacing: .08em; font-size: .7rem; color: var(--geo-muted); }
+.side-flag { font-size: 2.4rem; line-height: 1.1; }
+.side-name { font-weight: 700; }
+.side-owner { font-size: .8rem; color: var(--geo-muted); }
+.side-soldiers { font-size: 1.8rem; font-weight: 800; }
+.battle-center { text-align: center; }
+.dice-pairs { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; min-height: 50px; align-items: center; }
+.dice-pair { display: flex; align-items: center; gap: .3rem; }
+.round-losses { width: 100%; font-size: .8rem; color: var(--geo-muted); }
+.stage-commentary { margin-top: .6rem; font-style: italic; color: #c9d6f2; }
+
+.die {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 10px;
+    font-weight: 800; font-size: 1.25rem; color: #111;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25);
+    animation: roll .45s ease-out;
+}
+.die-attacker { background: #dbe7ff; }
+.die-defender { background: #ffe1e3; }
+.die.win { outline: 3px solid var(--geo-success); }
+.die.lose { opacity: .45; text-decoration: line-through; }
+.die.tie { outline: 3px solid var(--geo-warning); }
+.vs { font-size: .75rem; color: var(--geo-muted); }
+@keyframes roll { from { transform: rotate(-200deg) scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ── Side panel ────────────────────────────────────────────────────────── */
+.turn-badge { background: var(--geo-surface-2); border: 1px solid var(--geo-border); }
+.turn-badge.yours { background: var(--geo-primary); border-color: var(--geo-primary); animation: pulse-blue 1.6s infinite; }
+#ff-btn.active { background: var(--geo-warning); color: #111; border-color: var(--geo-warning); }
+
+.deploy-row { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .25rem 0; border-bottom: 1px dashed var(--geo-border); }
+.deploy-count { min-width: 2.4rem; color: var(--geo-text) !important; opacity: 1 !important; }
+.steps { padding-left: 1.2rem; }
+.steps li { color: var(--geo-muted); }
+.steps li.now { color: var(--geo-text); }
+.steps li.done { color: #9fe0d6; }
+
+.standings li { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "chip name nums" "chip profile nums"; column-gap: .4rem; padding: .35rem .4rem; border-radius: 8px; font-size: .88rem; }
+.standings li .chip { grid-area: chip; align-self: center; }
+.standings li .name { grid-area: name; font-weight: 600; }
+.standings li .profile { grid-area: profile; font-size: .72rem; color: var(--geo-muted); }
+.standings li .nums { grid-area: nums; align-self: center; font-size: .78rem; color: var(--geo-muted); text-align: right; }
+.standings li.current { background: rgba(79, 140, 255, .14); }
+.standings li.out { opacity: .45; }
+.standings li.out .name { text-decoration: line-through; }
+
+.feed { max-height: 460px; overflow-y: auto; display: flex; flex-direction: column; gap: .35rem; }
+.feed-item { padding: .45rem .65rem; border-radius: 8px; background: var(--geo-surface-2); border-left: 3px solid var(--geo-border); font-size: .82rem; line-height: 1.4; }
+.feed-system { border-left-color: #56607d; color: var(--geo-muted); }
+.feed-attack { border-left-color: var(--geo-danger); }
+.feed-round { border-left-color: #b35c63; }
+.feed-conquer { border-left-color: var(--geo-success); font-weight: 600; }
+.feed-repelled { border-left-color: var(--geo-warning); }
+.feed-eliminate { border-left-color: #000; background: #2a1620; }
+.feed-win { border-left-color: gold; font-weight: 700; }
+.feed-decision { border-left-color: #9b5de5; background: #1f1d3a; }
+.feed-commentary { border-left-color: var(--geo-primary); font-style: italic; color: #c9d6f2; }
+.feed-deploy, .feed-transfer, .feed-reinforce { border-left-color: #2f6f99; }
+.mini-dice { display: block; margin-top: .15rem; font-size: .72rem; color: var(--geo-muted); }
+.mini-dice b { color: var(--geo-text); }
+
+/* ── Toasts ────────────────────────────────────────────────────────────── */
+.geo-toast-area { position: fixed; bottom: 1rem; right: 1rem; z-index: 2000; display: flex; flex-direction: column; gap: .5rem; max-width: 360px; }
+.geo-toast { padding: .7rem 1rem; border-radius: 10px; background: var(--geo-surface-2); border: 1px solid var(--geo-border); box-shadow: 0 8px 24px rgba(0, 0, 0, .4); transition: opacity .35s, transform .35s; font-size: .9rem; }
+.geo-toast-error { border-color: var(--geo-danger); }
+.geo-toast-success { border-color: var(--geo-success); }
+.geo-toast.hide { opacity: 0; transform: translateY(8px); }
+
+#board-filter, #board-sort { min-width: 9.5rem; }

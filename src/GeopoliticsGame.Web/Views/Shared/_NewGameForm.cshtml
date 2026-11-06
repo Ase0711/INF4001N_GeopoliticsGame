@@ -1,0 +1,23 @@
+@model NewGameViewModel
+@{
+    string Millions(long p) => p >= 1_000_000 ? $"{p / 1_000_000.0:0.#}M" : p >= 1000 ? $"{p / 1000.0:0.#}K" : p.ToString();
+}
+<form asp-controller="Games" asp-action="Create" method="post" class="new-game-form" data-country-picker>
+    <label class="form-label fw-semibold" for="countrySearch">Choose your country</label>
+    <input type="search" id="countrySearch" class="form-control mb-2" placeholder="Search countries…"
+           autocomplete="off" data-country-search aria-controls="CountryCode" />
+    <select asp-for="CountryCode" class="form-select country-select" size="8" required>
+        @foreach (var c in Model.Countries)
+        {
+            var soldiers = SoldierAllocator.SoldiersFor(c.Population);
+            <option value="@c.Code" data-name="@c.Name.ToLowerInvariant()">
+                @c.Flag @c.Name — @Millions(c.Population) people · @soldiers soldier@(soldiers == 1 ? "" : "s")
+            </option>
+        }
+    </select>
+    <span asp-validation-for="CountryCode" class="text-danger small"></span>
+    <div class="d-flex align-items-center justify-content-between mt-3 gap-2 flex-wrap">
+        <small class="text-secondary">9 rival nations are drawn at random. Who moves first is random too.</small>
+        <button type="submit" class="btn btn-primary px-4">⚔️ Start campaign</button>
+    </div>
+</form>
