@@ -13,15 +13,6 @@ public sealed record ContinueDecision(bool Continue, string Justification);
 
 public sealed record TransferPlan(string FromCode, string ToCode, int Amount, string Justification);
 
-/// <summary>
-/// Heuristic NPC strategy that plays to win. Each call studies the board and returns a
-/// decision together with a short explanation for the player.
-///
-/// Profiles tune the risk appetite:
-///  • Aggressive — attacks at even odds, pushes on longer, puts every reinforcement into one strike force.
-///  • Balanced   — wants a clear edge (1.4×) and splits reinforcements between attack and defence.
-///  • Defensive  — only attacks with overwhelming odds (2×) and protects weak holdings first.
-/// </summary>
 public sealed class NpcStrategy
 {
     private readonly NpcProfile _profile;
@@ -30,7 +21,6 @@ public sealed class NpcStrategy
 
     public NpcProfile Profile => _profile;
 
-    /// <summary>Minimum (committable attackers ÷ defenders) needed to launch an attack.</summary>
     public double AttackThreshold => _profile switch
     {
         NpcProfile.Aggressive => 1.0,
@@ -38,7 +28,6 @@ public sealed class NpcStrategy
         _ => 1.4
     };
 
-    /// <summary>Keep rolling while (committable attackers ÷ defenders) stays at or above this.</summary>
     public double ContinueThreshold => _profile switch
     {
         NpcProfile.Aggressive => 0.5,
@@ -46,7 +35,6 @@ public sealed class NpcStrategy
         _ => 0.8
     };
 
-    // ─────────────────────────── Reinforcements ───────────────────────────
 
     public ReinforcementPlan PlanReinforcements(GameState state, string npcId, int amount)
     {
@@ -56,7 +44,6 @@ public sealed class NpcStrategy
 
         var enemies = state.Board.Where(t => t.OwnerId != npcId).ToList();
 
-        // The launch pad is whichever country would get the best attack after the reinforcements land.
         var launcher = mine
             .Select(m => (Territory: m, Score: enemies.Count == 0
                 ? m.Soldiers
@@ -102,7 +89,6 @@ public sealed class NpcStrategy
         return new ReinforcementPlan(allocation, why);
     }
 
-    // ───────────────────────────── Attacking ─────────────────────────────
 
     public AttackDecision PlanAttack(GameState state, string npcId)
     {
@@ -185,7 +171,6 @@ public sealed class NpcStrategy
             $"to keep {attackerSoldiers} soldiers alive.");
     }
 
-    // ───────────────────────────── Transfers ─────────────────────────────
 
     public TransferPlan? PlanTransfer(GameState state, string npcId)
     {
@@ -214,17 +199,13 @@ public sealed class NpcStrategy
             "so it isn't an easy target.");
     }
 
-    /// <summary>
-    /// After a conquest: move a real garrison into the new country so it isn't retaken next turn.
-    /// Without this, conquered countries hold only their 2–4 reward soldiers and change hands endlessly.
-    /// </summary>
+
     public TransferPlan? PlanGarrison(GameState state, string npcId, string fromCode, string toCode)
     {
         var from = state.Board.First(t => t.CountryCode == fromCode);
         var to = state.Board.First(t => t.CountryCode == toCode);
         if (from.OwnerId != npcId || to.OwnerId != npcId || from.Soldiers < 3) return null;
 
-        // Aggressive pushes the spearhead forward; others split the army evenly.
         var amount = _profile == NpcProfile.Aggressive
             ? (from.Soldiers - 1) * 2 / 3
             : (from.Soldiers - to.Soldiers) / 2;
@@ -237,21 +218,19 @@ public sealed class NpcStrategy
         return new TransferPlan(fromCode, toCode, amount, why);
     }
 
-    // ───────────────────────────── Scoring ───────────────────────────────
 
     private static double ScoreTarget(GameState state, string npcId, int committable, Territory target)
     {
         if (committable < 1) return double.MinValue;
-        // Odds matter, but beyond 3× extra odds stop dominating, so the NPC is willing to
-        // take on real armies instead of only ever bullying the weakest country.
+
         var odds = Math.Min(committable / (double)target.Soldiers, 3.0);
         var score = odds * 6
                     + BattleEngine.ConquestReward(target.SoldierValue) * 1.5
-                    + Math.Min(target.Soldiers, 40) * 0.25; // destroying a sizeable enemy army is valuable
+                    + Math.Min(target.Soldiers, 40) * 0.25; 
 
-        if (state.Board.Count(t => t.OwnerId == target.OwnerId) == 1) score += 10;     // elimination
-        if (target.OwnerId == StrongestRival(state, npcId)) score += 5;               // check the leader
-        return score; // NPCs treat the human like any other rival: no ganging up
+        if (state.Board.Count(t => t.OwnerId == target.OwnerId) == 1) score += 10;    
+        if (target.OwnerId == StrongestRival(state, npcId)) score += 5;              
+        return score; 
     }
 
     private static string? StrongestRival(GameState state, string npcId) =>

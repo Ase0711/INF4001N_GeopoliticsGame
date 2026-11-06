@@ -6,10 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GeopoliticsGame.Web.Controllers;
 
-/// <summary>
-/// JSON API used by the game page. Reading a game is public; every move requires the
-/// signed-in owner (checked again in <see cref="GameService"/>) and an anti-forgery token.
-/// </summary>
+
 [ApiController]
 [Route("api/games/{id}")]
 [ServiceFilter(typeof(ApiExceptionFilter))]

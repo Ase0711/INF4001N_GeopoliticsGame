@@ -7,14 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GeopoliticsGame.Web.Controllers;
 
-/// <summary>Pages for the player's games: the dashboard, starting a game, and the game board.</summary>
+
 public sealed class GamesController : Controller
 {
     private readonly GameService _games;
 
     public GamesController(GameService games) => _games = games;
 
-    /// <summary>Dashboard: the signed-in player's games, with searching, filtering and sorting.</summary>
     [Authorize]
     public async Task<IActionResult> Index(string? status, string? q, string sort = "recent", CancellationToken ct = default)
     {
@@ -73,7 +72,7 @@ public sealed class GamesController : Controller
         }
     }
 
-    /// <summary>The game board. Public: anyone with the link can watch; only the owner can play.</summary>
+
     [AllowAnonymous]
     public async Task<IActionResult> Play(string id, CancellationToken ct)
     {

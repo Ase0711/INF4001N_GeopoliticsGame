@@ -79,7 +79,7 @@ public sealed class AccountController : Controller
         foreach (var (field, message) in result.Errors) ModelState.AddModelError(field, message);
     }
 
-    /// <summary>Only redirects to local URLs, to prevent open-redirect attacks.</summary>
+
     private IActionResult RedirectToLocal(string? returnUrl) =>
         !string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)
             ? LocalRedirect(returnUrl)

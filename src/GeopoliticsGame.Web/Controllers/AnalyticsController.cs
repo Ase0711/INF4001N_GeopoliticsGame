@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GeopoliticsGame.Web.Controllers;
 
-/// <summary>Platform analytics are public; personal analytics show when signed in.</summary>
+
 public sealed class AnalyticsController : Controller
 {
     private readonly AnalyticsService _analytics;

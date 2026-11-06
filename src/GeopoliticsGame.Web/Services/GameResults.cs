@@ -2,7 +2,7 @@ using GeopoliticsGame.Core.Domain;
 
 namespace GeopoliticsGame.Web.Services;
 
-/// <summary>Board state at the moment a log entry was written. Lets the browser replay NPC turns.</summary>
+
 public sealed class TerritorySnapshot
 {
     public string Code { get; init; } = string.Empty;
@@ -19,19 +19,19 @@ public sealed class ReplayFrame
     public List<TerritorySnapshot> Board { get; init; } = new();
 }
 
-/// <summary>What the API returns after any move.</summary>
+
 public sealed class GameActionResult
 {
     public GameState Game { get; set; } = new();
 
-    /// <summary>"continue" | "conquered" | "repelled", for roll actions.</summary>
+ 
     public string? Outcome { get; set; }
 
     public BattleRound? Round { get; set; }
     public string? Commentary { get; set; }
     public int? Reward { get; set; }
 
-    /// <summary>Step-by-step frames of the NPC turns that ran after this action (if any).</summary>
+
     public List<ReplayFrame> Frames { get; } = new();
 }
 

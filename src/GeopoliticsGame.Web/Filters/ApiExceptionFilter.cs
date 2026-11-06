@@ -5,10 +5,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GeopoliticsGame.Web.Filters;
 
-/// <summary>
-/// Turns domain exceptions into clean JSON errors ({ "error": "..." }) with the right status
-/// code, so API actions stay free of try/catch noise.
-/// </summary>
 public sealed class ApiExceptionFilter : IExceptionFilter
 {
     private readonly ILogger<ApiExceptionFilter> _logger;

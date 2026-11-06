@@ -4,7 +4,7 @@ using GeopoliticsGame.Web.Models;
 
 namespace GeopoliticsGame.Web.Services;
 
-/// <summary>Bonus feature: analytics for each player and for the platform as a whole.</summary>
+
 public sealed class AnalyticsService
 {
     private readonly IGameRepository _games;

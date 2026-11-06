@@ -1,8 +1,6 @@
 namespace GeopoliticsGame.Core.Domain;
 
-/// <summary>
-/// One country on the board of a specific game, with its current owner and garrison.
-/// </summary>
+
 public class Territory
 {
     public string CountryCode { get; set; } = string.Empty;
@@ -10,7 +8,6 @@ public class Territory
     public string Flag { get; set; } = string.Empty;
     public long Population { get; set; }
 
-    /// <summary>Starting soldier value derived from population (used for the conquest reward).</summary>
     public int SoldierValue { get; set; }
 
     public int Soldiers { get; set; }
@@ -30,10 +27,7 @@ public class Player
     public int ReinforcementsPending { get; set; }
 }
 
-/// <summary>
-/// An attack that has started but not finished. Persisted with the game so closing the
-/// browser mid-attack cannot be used to dodge the outcome (anti-cheat).
-/// </summary>
+
 public class PendingAttack
 {
     public string AttackerId { get; set; } = string.Empty;
@@ -42,7 +36,7 @@ public class PendingAttack
     public int Rounds { get; set; }
 }
 
-/// <summary>Result of one combat round. Dice are kept in roll order; die i fights die i.</summary>
+
 public class BattleRound
 {
     public List<int> AttackerDice { get; set; } = new();
@@ -65,9 +59,6 @@ public class LogEntry
     public BattleRound? Round { get; set; }
 }
 
-/// <summary>
-/// The complete state of one game session. Stored as a single document in MongoDB.
-/// </summary>
 public class GameState
 {
     public string Id { get; set; } = string.Empty;
@@ -92,7 +83,7 @@ public class GameState
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? FinishedAt { get; set; }
 
-    /// <summary>Per-game analytics for the human player.</summary>
+  
     public GameStats Stats { get; set; } = new();
 }
 

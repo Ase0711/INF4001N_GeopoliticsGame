@@ -2,11 +2,7 @@ using GeopoliticsGame.Core.Domain;
 
 namespace GeopoliticsGame.Core.Data;
 
-/// <summary>
-/// Seed data for the countries collection. Populations are approximate figures from
-/// https://www.worldometers.info/world-population/population-by-country/ .
-/// The soldier value is NOT stored here; it is derived by <c>SoldierAllocator</c>.
-/// </summary>
+
 public static class CountryCatalogue
 {
     private const long M = 1_000_000;

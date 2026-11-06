@@ -4,7 +4,7 @@ using GeopoliticsGame.Core.Engine;
 
 namespace GeopoliticsGame.Web.Models;
 
-/// <summary>A light, list-friendly view of a game (dashboard, analytics, home page).</summary>
+
 public sealed class GameSummary
 {
     public string Id { get; init; } = string.Empty;

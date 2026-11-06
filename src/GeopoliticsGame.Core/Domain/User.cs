@@ -4,13 +4,12 @@ public class User
 {
     public string Id { get; set; } = string.Empty;
 
-    /// <summary>Stored lower-case; unique.</summary>
     public string Username { get; set; } = string.Empty;
 
-    /// <summary>Stored lower-case; unique.</summary>
+
     public string Email { get; set; } = string.Empty;
 
-    /// <summary>PBKDF2 hash — never the plain password.</summary>
+
     public string PasswordHash { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
@@ -28,7 +27,6 @@ public class UserStats
     public int BattlesLost { get; set; }
 }
 
-/// <summary>Increment-only change to <see cref="UserStats"/> (maps to an atomic $inc in MongoDB).</summary>
 public sealed class UserStatsDelta
 {
     public int GamesPlayed { get; init; }

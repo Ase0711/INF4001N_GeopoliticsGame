@@ -2,16 +2,6 @@ using GeopoliticsGame.Core.Domain;
 
 namespace GeopoliticsGame.Core.Engine;
 
-/// <summary>
-/// Pure combat rules from the case study:
-/// <list type="bullet">
-///   <item>An attacker needs at least 2 soldiers, and must always leave 1 behind.</item>
-///   <item>Dice per side = least soldiers available to fight = min(attacker − 1, defender).</item>
-///   <item>Die i of the attacker is matched against die i of the defender (roll order).</item>
-///   <item>Higher die wins and the other side loses one soldier; a tie kills nobody.</item>
-///   <item>Conquest reward = max(2, soldier value / 2), rounded down.</item>
-/// </list>
-/// </summary>
 public sealed class BattleEngine
 {
     public const int MinimumSoldiersToAttack = 2;
@@ -31,7 +21,6 @@ public sealed class BattleEngine
     public static int ConquestReward(int conqueredSoldierValue) =>
         Math.Max(2, conqueredSoldierValue / 2);
 
-    /// <summary>Rolls and resolves one round. Does not mutate any territory.</summary>
     public BattleRound ResolveRound(int attackerSoldiers, int defenderSoldiers)
     {
         if (!CanAttack(attackerSoldiers))

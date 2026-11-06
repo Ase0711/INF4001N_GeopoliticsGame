@@ -16,7 +16,6 @@ public sealed class AccountResult
         new() { Errors = new Dictionary<string, string> { [field] = message } };
 }
 
-/// <summary>Registration and credential checks. Sign-in itself (the auth cookie) is done by the controller.</summary>
 public sealed class AccountService
 {
     private readonly IUserRepository _users;
@@ -54,7 +53,7 @@ public sealed class AccountService
     {
         var user = await _users.FindByUsernameOrEmailAsync(usernameOrEmail, ct);
 
-        // The same message either way, so the login form can't be used to find out which usernames exist.
+    
         if (user is null || !_hasher.Verify(password, user.PasswordHash))
             return AccountResult.Fail(string.Empty, "Invalid username/email or password.");
 

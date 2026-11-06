@@ -13,7 +13,6 @@ public enum PlayerType
     Npc
 }
 
-/// <summary>NPC personality profiles (bonus feature: profiles for NPCs).</summary>
 public enum NpcProfile
 {
     Balanced,

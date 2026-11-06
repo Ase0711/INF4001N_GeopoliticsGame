@@ -5,11 +5,6 @@ using MongoDB.Driver;
 
 namespace GeopoliticsGame.Web.Infrastructure.Mongo;
 
-/// <summary>
-/// Owns the MongoDB client/database and the three collections. Mapping is done with
-/// conventions, so the Core domain classes carry no MongoDB attributes and Core stays
-/// independent of the database.
-/// </summary>
 public sealed class MongoContext
 {
     public const string UsersCollection = "users";
@@ -36,11 +31,11 @@ public sealed class MongoContext
         Database = client.GetDatabase(options.DatabaseName);
     }
 
-    /// <summary>Round-trips a ping to verify the server is reachable and the credentials work.</summary>
+
     public async Task PingAsync(CancellationToken ct = default) =>
         await Database.RunCommandAsync<BsonDocument>(new BsonDocument("ping", 1), cancellationToken: ct);
 
-    /// <summary>Creates the indexes the app relies on (idempotent).</summary>
+
     public async Task EnsureIndexesAsync(CancellationToken ct = default)
     {
         await Users.Indexes.CreateManyAsync(new[]

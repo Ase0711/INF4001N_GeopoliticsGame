@@ -1,8 +1,5 @@
 namespace GeopoliticsGame.Core.Engine;
 
-/// <summary>
-/// Converts a population into a starting soldier value, using the bands from the case study.
-/// </summary>
 public static class SoldierAllocator
 {
     private static readonly (long MaxPopulation, int Soldiers)[] Bands =
@@ -26,6 +23,6 @@ public static class SoldierAllocator
         {
             if (population <= max) return soldiers;
         }
-        return MaxSoldiers; // "anything more"
+        return MaxSoldiers; 
     }
 }

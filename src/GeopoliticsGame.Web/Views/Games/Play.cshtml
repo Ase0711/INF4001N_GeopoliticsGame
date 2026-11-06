@@ -7,7 +7,7 @@
      data-signed-in="@(Model.IsSignedIn ? "true" : "false")"
      data-api="@Url.Content("~/api/games/")@Model.GameId">
 
-    <!-- Header -->
+
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
             <h1 class="h3 mb-1">@Model.OwnerUsername's campaign</h1>
@@ -42,7 +42,7 @@
     <div id="game-over" class="alert d-none" role="status"></div>
 
     <div class="row g-3">
-        <!-- Board -->
+     
         <div class="col-xl-8">
             <section id="battle-stage" class="geo-card battle-stage mb-3 d-none" aria-live="polite">
                 <div class="battle-side" id="stage-attacker"></div>
@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <!-- Side panel -->
+   
         <div class="col-xl-4">
             @if (Model.CanPlay)
             {

@@ -4,11 +4,6 @@ using GeopoliticsGame.Core.Engine;
 
 namespace GeopoliticsGame.Web.Services;
 
-/// <summary>
-/// Application service for gameplay. It locks, loads, checks ownership, runs the engine,
-/// runs the NPCs, then saves the game and updates stats. All rules are enforced in
-/// <see cref="GameEngine"/>; this class only coordinates.
-/// </summary>
 public sealed class GameService
 {
     private const int MaxNpcTurnsPerRequest = 60;
@@ -38,7 +33,6 @@ public sealed class GameService
 
     public bool CommentaryIsLive => _commentary.IsLive;
 
-    // ───────────────────────────── Queries ─────────────────────────────
 
     public Task<IReadOnlyList<CountryInfo>> GetCountriesAsync(CancellationToken ct = default) =>
         _countries.GetAllAsync(ct);
@@ -52,7 +46,6 @@ public sealed class GameService
     public Task<IReadOnlyList<GameState>> GetAllGamesAsync(CancellationToken ct = default) =>
         _games.FindAllAsync(ct);
 
-    // ───────────────────────────── Commands ────────────────────────────
 
     public async Task<GameState> CreateAsync(string userId, string username, string countryCode, CancellationToken ct = default)
     {
@@ -107,7 +100,7 @@ public sealed class GameService
             result.Reward = roll.Outcome == AttackOutcome.Conquered ? roll.Reward : null;
         }, runNpcs: false, ct);
 
-    /// <summary>Calling off an attack ends the turn, so the NPCs then play.</summary>
+ 
     public Task<GameActionResult> RetreatAsync(string id, string userId, CancellationToken ct = default) =>
         ExecuteAsync(id, userId, (engine, _) =>
         {
@@ -122,11 +115,10 @@ public sealed class GameService
             return Task.CompletedTask;
         }, runNpcs: true, ct);
 
-    /// <summary>Runs pending NPC turns, e.g. when an NPC moves first in a new game.</summary>
+
     public Task<GameActionResult> RunNpcTurnsAsync(string id, string userId, CancellationToken ct = default) =>
         ExecuteAsync(id, userId, (_, _) => Task.CompletedTask, runNpcs: true, ct);
 
-    // ───────────────────────────── Pipeline ────────────────────────────
 
     private async Task<GameActionResult> ExecuteAsync(
         string id,

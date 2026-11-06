@@ -4,23 +4,18 @@ namespace GeopoliticsGame.Core.Engine;
 
 public enum AttackOutcome
 {
-    /// <summary>Both sides still standing; the attacker may roll again or retreat.</summary>
+
     Continue,
 
-    /// <summary>The defender lost all soldiers and the country changed hands.</summary>
+   
     Conquered,
 
-    /// <summary>The attacker is down to 1 soldier and the attack failed.</summary>
+  
     Repelled
 }
 
 public sealed record AttackRoundResult(BattleRound Round, AttackOutcome Outcome, int Reward, int RoundNumber);
 
-/// <summary>
-/// Applies every game rule to a <see cref="GameState"/>. All changes to a game go through
-/// this class's methods, and each one checks the rules before it changes anything. That
-/// keeps the state valid whether the move comes from the human (via the API) or from an NPC.
-/// </summary>
 public sealed class GameEngine
 {
     public const string HumanId = "human";
@@ -37,7 +32,7 @@ public sealed class GameEngine
     private readonly GameState _state;
     private readonly BattleEngine _battle;
 
-    /// <summary>Raised after every log entry, so callers can capture replay frames.</summary>
+   
     public event Action<LogEntry>? Logged;
 
     public GameEngine(GameState state, IDice dice)
@@ -46,8 +41,7 @@ public sealed class GameEngine
         _battle = new BattleEngine(dice);
     }
 
-    // ───────────────────────────── Queries ─────────────────────────────
-
+ 
     public GameState State => _state;
 
     public bool IsActive => _state.Status == GameStatus.Active;
@@ -69,12 +63,7 @@ public sealed class GameEngine
     public IReadOnlyList<Territory> TerritoriesOf(string playerId) =>
         _state.Board.Where(t => t.OwnerId == playerId).ToList();
 
-    // ────────────────────────────── Setup ──────────────────────────────
-
-    /// <summary>
-    /// Creates a new game: the chosen country plus 9 random others, one human player and 9 NPCs,
-    /// soldiers from population, and a random turn order.
-    /// </summary>
+ 
     public static GameState CreateGame(
         string ownerUserId,
         string ownerUsername,
@@ -149,9 +138,7 @@ public sealed class GameEngine
         return state;
     }
 
-    // ───────────────────────────── Commands ────────────────────────────
-
-    /// <summary>Places start-of-turn reinforcements on countries the player owns.</summary>
+ 
     public void Deploy(string playerId, IReadOnlyDictionary<string, int> allocation)
     {
         EnsureCanAct(playerId);
@@ -185,7 +172,6 @@ public sealed class GameEngine
         Log(LogType.Deploy, playerId, $"{player.Name} deploys {Plural(total, "reinforcement")}: {detail}.");
     }
 
-    /// <summary>Moves soldiers between two of the player's countries; the source keeps at least 1.</summary>
     public void Transfer(string playerId, string fromCode, string toCode, int amount)
     {
         EnsureCanAct(playerId);
@@ -211,7 +197,7 @@ public sealed class GameEngine
             from.CountryCode, to.CountryCode);
     }
 
-    /// <summary>Starts the player's single attack for this turn.</summary>
+    
     public void StartAttack(string playerId, string fromCode, string toCode)
     {
         EnsureCanAct(playerId);
@@ -248,7 +234,6 @@ public sealed class GameEngine
             from.CountryCode, to.CountryCode);
     }
 
-    /// <summary>Rolls one round of the attack that is in progress.</summary>
     public AttackRoundResult RollAttack(string playerId)
     {
         EnsureCanAct(playerId);
@@ -290,7 +275,7 @@ public sealed class GameEngine
         return new AttackRoundResult(round, AttackOutcome.Continue, 0, pending.Rounds);
     }
 
-    /// <summary>Calls off the attack. As the rules require, this also ends the player's turn.</summary>
+    
     public void Retreat(string playerId)
     {
         EnsureCanAct(playerId);
@@ -307,7 +292,7 @@ public sealed class GameEngine
         AdvanceTurn();
     }
 
-    /// <summary>Ends (or skips) the player's turn.</summary>
+ 
     public void EndTurn(string playerId)
     {
         EnsureCanAct(playerId);
@@ -323,15 +308,13 @@ public sealed class GameEngine
         AdvanceTurn();
     }
 
-    /// <summary>Adds an explanation of an NPC decision to the battle feed.</summary>
     public void RecordDecision(string playerId, string justification) =>
         Log(LogType.Decision, playerId, $"🤖 {GetPlayer(playerId).Name}: {justification}");
 
-    /// <summary>Adds AI commentary to the battle feed.</summary>
+  
     public void RecordCommentary(string text) =>
         Log(LogType.Commentary, "ai", $"🎙️ {text}");
 
-    // ───────────────────────────── Internals ───────────────────────────
 
     private AttackRoundResult Conquer(
         Player attacker, Player defender, Territory from, Territory to, BattleRound round, int rounds)
@@ -399,7 +382,6 @@ public sealed class GameEngine
         }
     }
 
-    /// <summary>From round 2 onwards: 2 soldiers for every country controlled.</summary>
     private void GrantReinforcements(Player player)
     {
         if (_state.Round < 2) return;

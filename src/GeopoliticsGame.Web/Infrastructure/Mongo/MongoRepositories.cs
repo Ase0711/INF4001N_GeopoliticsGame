@@ -33,7 +33,6 @@ public sealed class MongoUserRepository : IUserRepository
     {
         if (d.IsEmpty) return;
 
-        // A single atomic $inc: concurrent games can't overwrite each other's stats.
         var update = Builders<User>.Update
             .Inc(u => u.Stats.GamesPlayed, d.GamesPlayed)
             .Inc(u => u.Stats.GamesWon, d.GamesWon)
@@ -65,7 +64,7 @@ public sealed class MongoGameRepository : IGameRepository
             .SortByDescending(g => g.UpdatedAt)
             .ToListAsync(ct));
 
-    // List views don't need the battle log; drop it so the objects passed around stay small.
+
     private static List<GameState> WithoutLogs(List<GameState> games)
     {
         foreach (var g in games) g.Log = new List<LogEntry>();
@@ -79,7 +78,6 @@ public sealed class MongoGameRepository : IGameRepository
         _games.ReplaceOneAsync(g => g.Id == game.Id, game, new ReplaceOptions { IsUpsert = false }, ct);
 }
 
-/// <summary>Country catalogue in MongoDB. Seeded automatically on first use.</summary>
 public sealed class MongoCountryRepository : ICountryRepository
 {
     private readonly IMongoCollection<CountryInfo> _countries;

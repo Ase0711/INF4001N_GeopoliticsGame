@@ -3,11 +3,7 @@ using GeopoliticsGame.Core.Domain;
 
 namespace GeopoliticsGame.Core.Engine;
 
-/// <summary>
-/// Plays out one complete NPC turn through the <see cref="GameEngine"/>, in the same order a
-/// human would: deploy → (optional) attack → (optional) transfer → end turn. Every decision
-/// is written to the feed together with its justification.
-/// </summary>
+
 public sealed class NpcTurnRunner
 {
     private const int MaxRoundsPerBattle = 200;
@@ -26,7 +22,6 @@ public sealed class NpcTurnRunner
         var state = engine.State;
         var strategy = new NpcStrategy(npc.Profile);
 
-        // 1. Reinforcements
         if (npc.ReinforcementsPending > 0)
         {
             var plan = strategy.PlanReinforcements(state, npc.Id, npc.ReinforcementsPending);
@@ -34,7 +29,7 @@ public sealed class NpcTurnRunner
             engine.Deploy(npc.Id, plan.Allocation);
         }
 
-        // 2. Attack
+  
         var decision = strategy.PlanAttack(state, npc.Id);
         engine.RecordDecision(npc.Id, decision.Justification);
 
@@ -94,7 +89,7 @@ public sealed class NpcTurnRunner
             }
         }
 
-        // 3. Consolidate
+
         var transfer = strategy.PlanTransfer(state, npc.Id);
         if (transfer is not null)
         {
@@ -102,7 +97,7 @@ public sealed class NpcTurnRunner
             engine.Transfer(npc.Id, transfer.FromCode, transfer.ToCode, transfer.Amount);
         }
 
-        // 4. Done
+ 
         engine.EndTurn(npc.Id);
     }
 

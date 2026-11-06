@@ -2,10 +2,6 @@ using GeopoliticsGame.Core.Abstractions;
 
 namespace GeopoliticsGame.Web.Services.Commentary;
 
-/// <summary>
-/// Offline commentator: builds varied sentences from the battle facts. Used when no LLM is
-/// configured and as the safety net whenever the LLM call fails.
-/// </summary>
 public sealed class TemplateCommentaryService : ICommentaryService
 {
     public bool IsLive => false;

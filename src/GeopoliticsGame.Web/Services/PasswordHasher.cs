@@ -8,10 +8,7 @@ public interface IPasswordHasher
     bool Verify(string password, string storedHash);
 }
 
-/// <summary>
-/// PBKDF2-HMAC-SHA256 with a random 128-bit salt per password and 210,000 iterations
-/// (the OWASP recommendation). Stored as <c>pbkdf2-sha256$iterations$salt$hash</c>.
-/// </summary>
+
 public sealed class Pbkdf2PasswordHasher : IPasswordHasher
 {
     private const string Scheme = "pbkdf2-sha256";

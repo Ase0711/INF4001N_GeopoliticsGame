@@ -6,11 +6,7 @@ using GeopoliticsGame.Core.Domain;
 
 namespace GeopoliticsGame.Web.Infrastructure.Memory;
 
-/// <summary>
-/// In-memory implementation of the repositories, used for offline demos or when MongoDB is
-/// not configured. Objects are deep-copied in and out, so it behaves like a real database
-/// (callers never share references with what is "stored"). Data is lost on restart.
-/// </summary>
+
 internal static class DeepCopy
 {
     private static readonly JsonSerializerOptions Options = new();

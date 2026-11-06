@@ -6,11 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace GeopoliticsGame.Web.Services.Commentary;
 
-/// <summary>
-/// Generates live battle commentary through an OpenAI-compatible Chat Completions API.
-/// Never throws: on a missing key, an HTTP error or a timeout it falls back to
-/// <see cref="TemplateCommentaryService"/>, so gameplay is never blocked by the AI.
-/// </summary>
+
 public sealed class LlmCommentaryService : ICommentaryService
 {
     private const string SystemPrompt =
