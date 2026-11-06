@@ -31,4 +31,22 @@ The database connection is already configured in the application.
 
 If the application cannot connect to MongoDB Atlas, it can switch to an in-memory database for local testing. The footer will indicate when this happens. Please note that data saved in memory will not be retained after restarting the application.
 
+## Deployment & Access Details
 
+- **Live Application URL:** https://inf4001n-geopoliticsgame.onrender.com/
+- **Application Test Account:**
+  - **Username:** `admin`
+  - **Email:** `admin@myuct.ac.za`
+  - **Password:** `Testing123!`
+
+## Database Access
+The MongoDB Atlas database has been configured with read/write access. 
+Invited marker accounts:
+- `ammarcanani@gmail.com`
+- `mc.tanner@uct.ac.za`
+- `ridewaan.hanslo@uct.ac.za`
+
+## How to Run Locally
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/Ase0711/INF4001N_GeopoliticsGame.git](https://github.com/Ase0711/INF4001N_GeopoliticsGame.git)
